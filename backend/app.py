@@ -10,12 +10,12 @@ from models.vulnerability import Vulnerability
 
 
 def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
+    app = Flask(__name__)    # créer l'application
+    app.config.from_object(Config)     # charger la config
 
     # Extensions
-    db.init_app(app)
-    JWTManager(app)
+    db.init_app(app)                # connecter MySQL
+    JWTManager(app)                 # activer JWT
     CORS(app, origins=["http://localhost:5173"])
 
     # Créer les tables
@@ -25,7 +25,7 @@ def create_app():
 
     # Routes
     from routes.auth_routes import auth_bp
-    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")  # enregistrer les routes
     from routes.scan_routes import scan_bp
     app.register_blueprint(scan_bp, url_prefix="/api/scans")
     from routes.report_routes import report_bp
