@@ -13,3 +13,7 @@ body {
   background-color: #F7FAFC;
   color: #1A202C;
 }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
