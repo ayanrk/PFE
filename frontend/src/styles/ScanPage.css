@@ -1,0 +1,375 @@
+.scan-page {
+  min-height: 100vh;
+  background: #F7FAFC;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.scan-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.scan-header {
+  margin-bottom: 2rem;
+}
+
+.scan-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0C447C;
+  margin-bottom: 6px;
+}
+
+.scan-subtitle {
+  font-size: 15px;
+  color: #718096;
+}
+
+/* ── Card ── */
+.scan-card {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #E2E8F0;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Form ── */
+.scan-field {
+  margin-bottom: 1.25rem;
+}
+
+.scan-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4A5568;
+  margin-bottom: 6px;
+}
+
+.scan-label-optional {
+  font-weight: 400;
+  color: #A0AEC0;
+}
+
+.scan-input {
+  width: 100%;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #1A202C;
+  outline: none;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+  transition: border-color 0.2s;
+}
+
+.scan-input:focus {
+  border-color: #185FA5;
+}
+
+/* ── Modules ── */
+.scan-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.scan-module-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+}
+
+.scan-module-card:hover {
+  border-color: #185FA5;
+  background: #F0F7FF;
+}
+
+.scan-module-card.selected {
+  border-color: #185FA5;
+  background: #E6F1FB;
+}
+
+.scan-module-icon {
+  font-size: 22px;
+}
+
+.scan-module-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.scan-module-desc {
+  font-size: 11px;
+  color: #718096;
+}
+
+.scan-checkbox {
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #CBD5E0;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.scan-checkbox.checked {
+  background: #185FA5;
+  border-color: #185FA5;
+}
+
+/* ── Error ── */
+.scan-error {
+  background: #FCEBEB;
+  border: 1px solid #F09595;
+  color: #A32D2D;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 1rem;
+}
+
+/* ── Scan button ── */
+.scan-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #185FA5, #0C447C);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  transition: opacity 0.2s;
+}
+
+.scan-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ── Loading ── */
+.scan-loading-card {
+  background: white;
+  border-radius: 14px;
+  padding: 2rem;
+  border: 1px solid #E2E8F0;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.scan-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #E2E8F0;
+  border-top: 4px solid #185FA5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.scan-loading-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0C447C;
+  margin-bottom: 4px;
+}
+
+.scan-loading-desc {
+  font-size: 13px;
+  color: #718096;
+}
+
+/* ── Results ── */
+.scan-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.scan-results-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0C447C;
+}
+
+.scan-pdf-btn {
+  background: #0C447C;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  transition: opacity 0.2s;
+}
+
+.scan-pdf-btn:hover {
+  opacity: 0.85;
+}
+
+.scan-scores-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.scan-score-card {
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  border: 1px solid #E2E8F0;
+}
+
+.scan-score-label {
+  font-size: 12px;
+  color: #4A5568;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.scan-score-value {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* ── Tabs ── */
+.scan-tabs-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.scan-tab {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #E2E8F0;
+  background: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #718096;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.scan-tab.active {
+  background: #185FA5;
+  color: white;
+  border-color: #185FA5;
+}
+
+.scan-tab-count {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 11px;
+}
+
+/* ── Vulnérabilités ── */
+.scan-vuln-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scan-no-vuln {
+  text-align: center;
+  color: #3B6D11;
+  padding: 2rem;
+  font-size: 15px;
+}
+
+.scan-vuln-card {
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.scan-vuln-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.scan-gravite-badge {
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.scan-vuln-module {
+  font-size: 11px;
+  font-weight: 700;
+  color: #185FA5;
+  background: #E6F1FB;
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+
+.scan-vuln-type {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A202C;
+}
+
+.scan-vuln-detail {
+  font-size: 13px;
+  color: #4A5568;
+  margin-bottom: 6px;
+}
+
+.scan-vuln-solution {
+  font-size: 12px;
+  color: #3B6D11;
+  background: #EAF3DE;
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.scan-vuln-payload {
+  display: block;
+  font-size: 12px;
+  background: #F7FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-top: 6px;
+  word-break: break-all;
+  font-family: monospace;
+}
