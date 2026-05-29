@@ -1,3 +1,5 @@
+/* ── History.css ── */
+
 .history-page {
   min-height: 100vh;
   background: #F7FAFC;
@@ -5,13 +7,13 @@
 }
 
 .history-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
 
 .history-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .history-title {
@@ -26,7 +28,7 @@
   color: #718096;
 }
 
-/* ── Tabs ── */
+/* ─── Tabs ─── */
 .history-tabs-row {
   display: flex;
   gap: 8px;
@@ -44,13 +46,13 @@
   cursor: pointer;
   color: #718096;
   font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   transition: all 0.2s;
 }
 
-.history-tab:hover {
-  border-color: #185FA5;
-  color: #185FA5;
-}
+.history-tab:hover { border-color: #185FA5; color: #185FA5; }
 
 .history-tab.active {
   background: #0C447C;
@@ -58,7 +60,7 @@
   border-color: #0C447C;
 }
 
-/* ── Empty ── */
+/* ─── Empty states ─── */
 .history-empty {
   text-align: center;
   color: #718096;
@@ -73,8 +75,9 @@
   border: 1px solid #E2E8F0;
 }
 
-.history-empty-icon {
-  font-size: 48px;
+.history-empty-icon-wrap {
+  display: flex;
+  justify-content: center;
   margin-bottom: 1rem;
 }
 
@@ -94,9 +97,12 @@
   font-weight: 600;
   cursor: pointer;
   font-family: 'Segoe UI', sans-serif;
+  transition: opacity 0.2s;
 }
 
-/* ── Two column layout ── */
+.history-empty-btn:hover { opacity: 0.9; }
+
+/* ─── Two-column layout ─── */
 .history-two-col {
   display: grid;
   grid-template-columns: 380px 1fr;
@@ -104,7 +110,7 @@
   align-items: start;
 }
 
-/* ── Scan list ── */
+/* ─── Scan list ─── */
 .history-scan-list {
   display: flex;
   flex-direction: column;
@@ -120,9 +126,7 @@
   transition: all 0.2s;
 }
 
-.history-scan-card:hover {
-  border-color: #185FA5;
-}
+.history-scan-card:hover { border-color: #185FA5; }
 
 .history-scan-card.selected {
   border-color: #185FA5;
@@ -141,6 +145,7 @@
   padding: 4px 10px;
   font-size: 13px;
   font-weight: 700;
+  /* background & color set inline (dynamic) */
 }
 
 .history-scan-date {
@@ -187,14 +192,15 @@
   font-weight: 600;
   cursor: pointer;
   font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   transition: opacity 0.2s;
 }
 
-.history-pdf-btn:hover {
-  opacity: 0.85;
-}
+.history-pdf-btn:hover { opacity: 0.85; }
 
-/* ── Detail panel ── */
+/* ─── Detail panel ─── */
 .history-detail-panel {
   background: white;
   border-radius: 14px;
@@ -226,7 +232,7 @@
   word-break: break-all;
 }
 
-/* ── Scores grid ── */
+/* ─── Scores grid ─── */
 .history-scores-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -238,6 +244,7 @@
   border-radius: 10px;
   padding: 1rem;
   text-align: center;
+  /* background set inline (dynamic) */
 }
 
 .history-score-label {
@@ -245,20 +252,20 @@
   color: #4A5568;
   margin-bottom: 4px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .history-score-value {
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 2px;
+  /* color set inline (dynamic) */
 }
 
-.history-score-level {
-  font-size: 10px;
-  font-weight: 600;
-}
-
-/* ── Vulnérabilités ── */
+/* ─── Vuln section ─── */
 .history-vuln-title {
   font-size: 15px;
   font-weight: 700;
@@ -279,8 +286,13 @@
   font-size: 14px;
   background: #EAF3DE;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
+/* ─── Module tab card ─── */
 .history-card {
   background: white;
   border-radius: 14px;
@@ -293,8 +305,12 @@
   font-weight: 700;
   color: #0C447C;
   margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+/* ─── Vuln cards ─── */
 .history-vuln-card {
   border: 1px solid #E2E8F0;
   border-radius: 10px;
@@ -315,6 +331,16 @@
   padding: 3px 10px;
   font-size: 11px;
   font-weight: 700;
+  /* background, color, border set inline (dynamic) */
+}
+
+.history-vuln-module-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #185FA5;
+  background: #E6F1FB;
+  border-radius: 6px;
+  padding: 3px 8px;
 }
 
 .history-vuln-type {
@@ -335,6 +361,9 @@
   background: #EAF3DE;
   border-radius: 6px;
   padding: 6px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
 }
 
 .history-vuln-payload {

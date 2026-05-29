@@ -1,14 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Shield, KeyRound, Zap, Database,
+  Rocket, Loader2, FileText, CheckCircle2, Lightbulb
+} from "lucide-react";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
 import "../styles/ScanPage.css";
 
 const MODULES = [
-  { id: "headers", label: "HTTP Headers",  icon: "🛡️", desc: "Headers de sécurité"      },
-  { id: "csrf",    label: "CSRF",          icon: "🔐", desc: "Tokens et cookies"         },
-  { id: "xss",     label: "XSS",           icon: "💉", desc: "Cross-Site Scripting"      },
-  { id: "sqli",    label: "SQL Injection", icon: "🗄️", desc: "Injection SQL via sqlmap"  },
+  { id: "headers", Icon: Shield,   label: "HTTP Headers",  desc: "Headers de sécurité"      },
+  { id: "csrf",    Icon: KeyRound, label: "CSRF",          desc: "Tokens et cookies"         },
+  { id: "xss",     Icon: Zap,      label: "XSS",           desc: "Cross-Site Scripting"      },
+  { id: "sqli",    Icon: Database, label: "SQL Injection", desc: "Injection SQL via sqlmap"  },
 ];
+
+const MODULE_ICONS = { headers: Shield, csrf: KeyRound, xss: Zap, sqli: Database };
 
 const GRAVITE_COLORS = {
   CRITIQUE: { bg: "#FCEBEB", color: "#A32D2D", border: "#F09595" },
@@ -16,9 +23,6 @@ const GRAVITE_COLORS = {
   MOYENNE:  { bg: "#FAEEDA", color: "#633806", border: "#FAC775" },
   FAIBLE:   { bg: "#EAF3DE", color: "#3B6D11", border: "#C0DD97" },
 };
-
-const scoreColor = (s) => s >= 80 ? "#3B6D11" : s >= 50 ? "#854F0B" : "#A32D2D";
-const scoreBg    = (s) => s >= 80 ? "#EAF3DE" : s >= 50 ? "#FAEEDA" : "#FCEBEB";
 
 export default function ScanPage() {
   const [url, setUrl]             = useState("");
@@ -29,6 +33,7 @@ export default function ScanPage() {
   const [vulns, setVulns]         = useState([]);
   const [error, setError]         = useState("");
   const [activeTab, setActiveTab] = useState("tous");
+  const navigate                  = useNavigate();
 
   const toggleModule = (id) => {
     setModules((prev) =>
@@ -40,12 +45,9 @@ export default function ScanPage() {
     e.preventDefault();
     if (!url) return;
     if (modules.length === 0) { setError("Sélectionnez au moins un module"); return; }
-    setLoading(true);
-    setResults(null);
-    setVulns([]);
-    setError("");
+    setLoading(true); setResults(null); setVulns([]); setError("");
     try {
-      const res    = await api.post("/scans/run", { url, modules, cookie: cookie || null });
+      const res = await api.post("/scans/run", { url, modules, cookie: cookie || null });
       setResults(res.data.scan);
       const detail = await api.get(`/scans/${res.data.scan.id}`);
       setVulns(detail.data.vulnerabilites);
@@ -59,10 +61,10 @@ export default function ScanPage() {
   const handlePDF = async () => {
     if (!results) return;
     try {
-      const res  = await api.get(`/reports/${results.id}`, { responseType: "blob" });
-      const url  = window.URL.createObjectURL(new Blob([res.data]));
+      const res = await api.get(`/reports/${results.id}`, { responseType: "blob" });
+      const blobUrl = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
-      link.href  = url;
+      link.href = blobUrl;
       link.setAttribute("download", `rapport_scan_${results.id}.pdf`);
       document.body.appendChild(link);
       link.click();
@@ -72,13 +74,18 @@ export default function ScanPage() {
     }
   };
 
-  const filteredVulns = activeTab === "tous" ? vulns : vulns.filter((v) => v.module === activeTab);
+  const scoreColor = (s) => s >= 80 ? "#3B6D11" : s >= 50 ? "#854F0B" : "#A32D2D";
+  const scoreBg    = (s) => s >= 80 ? "#EAF3DE" : s >= 50 ? "#FAEEDA" : "#FCEBEB";
+
+  const filteredVulns = activeTab === "tous"
+    ? vulns
+    : vulns.filter((v) => v.module === activeTab);
 
   return (
     <div className="scan-page">
       <Navbar />
-      <div className="scan-container">
 
+      <div className="scan-container">
         <div className="scan-header">
           <h1 className="scan-title">Scanner de vulnérabilités</h1>
           <p className="scan-subtitle">Entrez l'URL du site à analyser et sélectionnez les modules</p>
@@ -87,6 +94,7 @@ export default function ScanPage() {
         {/* Formulaire */}
         <div className="scan-card">
           <form onSubmit={handleScan}>
+
             <div className="scan-field">
               <label className="scan-label">URL cible *</label>
               <input
@@ -101,7 +109,8 @@ export default function ScanPage() {
 
             <div className="scan-field">
               <label className="scan-label">
-                Cookie d'authentification <span className="scan-label-optional">(optionnel)</span>
+                Cookie d'authentification{" "}
+                <span className="scan-label-optional">(optionnel)</span>
               </label>
               <input
                 type="text"
@@ -121,26 +130,34 @@ export default function ScanPage() {
                     <div
                       key={m.id}
                       onClick={() => toggleModule(m.id)}
-                      className={`scan-module-card ${selected ? "selected" : ""}`}
+                      className={`scan-module-card${selected ? " selected" : ""}`}
                     >
-                      <span className="scan-module-icon">{m.icon}</span>
+                      <div className="scan-module-icon-wrap">
+                        <m.Icon size={20} color={selected ? "#185FA5" : "#718096"} />
+                      </div>
                       <div>
                         <div className="scan-module-label">{m.label}</div>
                         <div className="scan-module-desc">{m.desc}</div>
                       </div>
-                      <div className={`scan-checkbox ${selected ? "checked" : ""}`}>
-                        {selected && "✓"}
-                      </div>
+                      <div className={`scan-checkbox${selected ? " checked" : ""}`} />
                     </div>
                   );
                 })}
               </div>
             </div>
 
-            {error && <div className="scan-error">⚠ {error}</div>}
+            {error && <div className="scan-error-box">{error}</div>}
 
-            <button type="submit" disabled={loading} className="scan-btn">
-              {loading ? "⏳ Scan en cours..." : "🚀 Lancer le scan"}
+            <button
+              type="submit"
+              disabled={loading}
+              className="scan-submit-btn"
+            >
+              {loading ? (
+                <><Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> Scan en cours...</>
+              ) : (
+                <><Rocket size={16} /> Lancer le scan</>
+              )}
             </button>
           </form>
         </div>
@@ -148,7 +165,7 @@ export default function ScanPage() {
         {/* Loading */}
         {loading && (
           <div className="scan-loading-card">
-            <div className="scan-spinner" />
+            <div className="scan-loading-spinner" />
             <div>
               <div className="scan-loading-title">Scan en cours...</div>
               <div className="scan-loading-desc">
@@ -163,72 +180,68 @@ export default function ScanPage() {
           <div>
             <div className="scan-results-header">
               <h2 className="scan-results-title">Résultats du scan</h2>
-              <button onClick={handlePDF} className="scan-pdf-btn">📄 Télécharger PDF</button>
+              <button onClick={handlePDF} className="scan-pdf-btn">
+                <FileText size={14} /> Télécharger PDF
+              </button>
             </div>
 
             <div className="scan-scores-grid">
+              {/* Score global */}
               <div className="scan-score-card" style={{ background: scoreBg(results.score_global) }}>
                 <div className="scan-score-label">Score Global</div>
                 <div className="scan-score-value" style={{ color: scoreColor(results.score_global) }}>
                   {results.score_global}/100
                 </div>
               </div>
-              {results.score_headers !== null && (
-                <div className="scan-score-card" style={{ background: scoreBg(results.score_headers) }}>
-                  <div className="scan-score-label">🛡️ Headers</div>
-                  <div className="scan-score-value" style={{ color: scoreColor(results.score_headers) }}>
-                    {results.score_headers}/100
+
+              {/* Scores par module */}
+              {["headers", "csrf", "xss", "sqli"].map((key) => {
+                const val = results[`score_${key}`];
+                const MIcon = MODULE_ICONS[key];
+                if (val === null || val === undefined) return null;
+                return (
+                  <div key={key} className="scan-score-card" style={{ background: scoreBg(val) }}>
+                    <div className="scan-score-label">
+                      <MIcon size={12} color={scoreColor(val)} />
+                      {key === "sqli" ? "SQLi" : key.toUpperCase()}
+                    </div>
+                    <div className="scan-score-value" style={{ color: scoreColor(val) }}>
+                      {val}/100
+                    </div>
                   </div>
-                </div>
-              )}
-              {results.score_csrf !== null && (
-                <div className="scan-score-card" style={{ background: scoreBg(results.score_csrf) }}>
-                  <div className="scan-score-label">🔐 CSRF</div>
-                  <div className="scan-score-value" style={{ color: scoreColor(results.score_csrf) }}>
-                    {results.score_csrf}/100
-                  </div>
-                </div>
-              )}
-              {results.score_xss !== null && (
-                <div className="scan-score-card" style={{ background: scoreBg(results.score_xss) }}>
-                  <div className="scan-score-label">💉 XSS</div>
-                  <div className="scan-score-value" style={{ color: scoreColor(results.score_xss) }}>
-                    {results.score_xss}/100
-                  </div>
-                </div>
-              )}
-              {results.score_sqli !== null && (
-                <div className="scan-score-card" style={{ background: scoreBg(results.score_sqli) }}>
-                  <div className="scan-score-label">🗄️ SQLi</div>
-                  <div className="scan-score-value" style={{ color: scoreColor(results.score_sqli) }}>
-                    {results.score_sqli}/100
-                  </div>
-                </div>
-              )}
+                );
+              })}
             </div>
 
+            {/* Vulnérabilités */}
             {vulns.length > 0 && (
               <div className="scan-card">
                 <div className="scan-tabs-row">
-                  {["tous", "headers", "csrf", "xss", "sqli"].map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`scan-tab ${activeTab === tab ? "active" : ""}`}
-                    >
-                      {tab.toUpperCase()}
-                      {tab !== "tous" && (
-                        <span className="scan-tab-count">
-                          {vulns.filter((v) => v.module === tab).length}
-                        </span>
-                      )}
-                    </button>
-                  ))}
+                  {["tous", "headers", "csrf", "xss", "sqli"].map((tab) => {
+                    const TIcon = MODULE_ICONS[tab];
+                    return (
+                      <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`scan-tab${activeTab === tab ? " active" : ""}`}
+                      >
+                        {TIcon && <TIcon size={12} />}
+                        {tab.toUpperCase()}
+                        {tab !== "tous" && (
+                          <span className="scan-tab-count">
+                            {vulns.filter((v) => v.module === tab).length}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 <div className="scan-vuln-list">
                   {filteredVulns.length === 0 ? (
-                    <div className="scan-no-vuln">✅ Aucune vulnérabilité pour ce module</div>
+                    <div className="scan-no-vuln">
+                      <CheckCircle2 size={16} /> Aucune vulnérabilité pour ce module
+                    </div>
                   ) : (
                     filteredVulns.map((v, i) => {
                       const g = GRAVITE_COLORS[v.gravite] || GRAVITE_COLORS["FAIBLE"];
@@ -245,7 +258,12 @@ export default function ScanPage() {
                             <span className="scan-vuln-type">{v.type}</span>
                           </div>
                           {v.detail   && <p className="scan-vuln-detail">{v.detail}</p>}
-                          {v.solution && <p className="scan-vuln-solution">💡 {v.solution}</p>}
+                          {v.solution && (
+                            <p className="scan-vuln-solution">
+                              <Lightbulb size={13} style={{ flexShrink: 0, marginTop: 1 }} />
+                              {v.solution}
+                            </p>
+                          )}
                           {v.payload  && <code className="scan-vuln-payload">{v.payload}</code>}
                         </div>
                       );

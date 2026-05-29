@@ -1,10 +1,12 @@
+/* ── Home.css ── */
+
 .home-page {
   min-height: 100vh;
   background: #F7FAFC;
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* ── Hero ── */
+/* ─── Hero ─── */
 .home-hero {
   background: linear-gradient(135deg, #0C447C 0%, #185FA5 100%);
   padding: 5rem 2rem 4rem;
@@ -19,7 +21,9 @@
 }
 
 .home-hero-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: rgba(255, 255, 255, 0.15);
   color: white;
   border-radius: 20px;
@@ -60,12 +64,13 @@
   font-weight: 700;
   cursor: pointer;
   font-family: 'Segoe UI', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: opacity 0.2s;
 }
 
-.home-btn-primary:hover {
-  opacity: 0.9;
-}
+.home-btn-primary:hover { opacity: 0.9; }
 
 .home-btn-secondary {
   background: rgba(255, 255, 255, 0.15);
@@ -77,14 +82,15 @@
   font-weight: 500;
   cursor: pointer;
   font-family: 'Segoe UI', sans-serif;
-  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
 }
 
-.home-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
+.home-btn-secondary:hover { background: rgba(255, 255, 255, 0.25); }
 
-/* ── Stats ── */
+/* ─── Stats ─── */
 .home-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -114,7 +120,7 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-/* ── Section modules ── */
+/* ─── Section Modules ─── */
 .home-section {
   padding: 5rem 2rem;
 }
@@ -154,16 +160,16 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.home-module-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-}
-
-.home-module-icon {
-  font-size: 32px;
+.home-module-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background set inline (dynamic color per module) */
 }
 
 .home-module-badge {
@@ -173,6 +179,7 @@
   font-size: 11px;
   font-weight: 700;
   width: fit-content;
+  /* background & color set inline */
 }
 
 .home-module-title {
@@ -187,7 +194,7 @@
   line-height: 1.6;
 }
 
-/* ── CTA ── */
+/* ─── CTA ─── */
 .home-cta {
   background: linear-gradient(135deg, #0C447C, #185FA5);
   padding: 5rem 2rem;
@@ -220,11 +227,9 @@
   transition: opacity 0.2s;
 }
 
-.home-cta-btn:hover {
-  opacity: 0.9;
-}
+.home-cta-btn:hover { opacity: 0.9; }
 
-/* ── Footer ── */
+/* ─── Footer ─── */
 .home-footer {
   background: #1A202C;
   color: #718096;
