@@ -32,51 +32,54 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      <div className="login-left">
-        <div className="login-left-content">
-          <div className="login-logo">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-              <rect width="40" height="40" rx="10" fill="white" fillOpacity="0.15"/>
-              <path d="M20 8L32 14V22C32 28.627 26.627 34.627 20 36C13.373 34.627 8 28.627 8 22V14L20 8Z" fill="white" fillOpacity="0.9"/>
-              <path d="M16 20L19 23L24 17" stroke="#185FA5" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <div className="login-card">
+
+        {/* Logo */}
+        <div className="login-logo">
+          <div className="login-logo-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="white" strokeWidth="2">
+              <path d="M12 2L20 6V12C20 16.4 16.4 20.6 12 22C7.6 20.6 4 16.4 4 12V6L12 2Z"/>
+              <path d="M9 12L11 14L15 10" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span className="login-logo-text">PFE Scanner</span>
           </div>
-          <h1 className="login-tagline">Sécurisez vos<br />applications web</h1>
-          <p className="login-tagline-sub">Scanner automatique de vulnérabilités — XSS, SQLi, CSRF, Headers</p>
-          <div className="login-features">
-            {["Analyse complète en quelques secondes","Rapport PDF professionnel","Historique de tous vos scans"].map((f, i) => (
-              <div key={i} className="login-feature-item">
-                <div className="login-feature-dot" />
-                <span className="login-feature-text">{f}</span>
-              </div>
-            ))}
+          <span className="login-logo-text">PFE Scanner</span>
+        </div>
+
+        {/* Onglets */}
+        <div className="login-tabs">
+          <span className="login-tab active">Connexion</span>
+          <Link to="/register" className="login-tab">Inscription</Link>
+        </div>
+
+        <h2 className="login-title">Bon retour</h2>
+        <p className="login-subtitle">Connectez-vous à votre espace de scan</p>
+
+        {error && <div className="login-error">⚠ {error}</div>}
+
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="login-field">
+            <label className="login-label">Adresse email</label>
+            <input type="email" name="email" placeholder="admin@test.com"
+              value={form.email} onChange={handleChange}
+              required className="login-input" />
           </div>
-        </div>
-      </div>
-      <div className="login-right">
-        <div className="login-card">
-          <h2 className="login-title">Connexion</h2>
-          <p className="login-subtitle">Accédez à votre espace de scan</p>
-          {error && <div className="login-error">⚠ {error}</div>}
-          <form onSubmit={handleSubmit} className="login-form">
-            <div className="login-field">
-              <label className="login-label">Adresse email</label>
-              <input type="email" name="email" placeholder="admin@test.com" value={form.email} onChange={handleChange} required className="login-input" />
-            </div>
-            <div className="login-field">
-              <label className="login-label">Mot de passe</label>
-              <input type="password" name="password" placeholder="••••••••" value={form.password} onChange={handleChange} required className="login-input" />
-            </div>
-            <button type="submit" disabled={loading} className="login-btn">
-              {loading ? "Connexion..." : "Se connecter"}
-            </button>
-          </form>
-          <p className="login-register-link">
-            Pas encore de compte ?{" "}
-            <Link to="/register" className="login-link">Créer un compte</Link>
-          </p>
-        </div>
+          <div className="login-field">
+            <label className="login-label">Mot de passe</label>
+            <input type="password" name="password" placeholder="••••••••"
+              value={form.password} onChange={handleChange}
+              required className="login-input" />
+          </div>
+          <button type="submit" disabled={loading} className="login-btn">
+            {loading ? "Connexion..." : "Se connecter"}
+          </button>
+        </form>
+
+        <p className="login-register-link">
+          Pas encore de compte ?{" "}
+          <Link to="/register" className="login-link">Créer un compte</Link>
+        </p>
+
       </div>
     </div>
   );
