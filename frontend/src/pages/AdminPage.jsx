@@ -111,57 +111,170 @@ export default function AdminPage() {
 
           {/* ─── DASHBOARD ─── */}
           {page === "dashboard" && stats && (
-            <>
-              <div className="admin-page-title">Tableau de bord</div>
-              <p className="admin-page-sub">Vue globale de l'activité</p>
+  <>
+    <div className="admin-page-title">Tableau de bord</div>
+    <p className="admin-page-sub">Vue globale de l'activité</p>
 
-              <div className="admin-kpis">
-                {[
-                  { label: "Utilisateurs",   value: stats.total_users,  Icon: Users       },
-                  { label: "Scans total",     value: stats.total_scans,  Icon: ScanLine    },
-                  { label: "Vulnérabilités", value: stats.total_vulns,  Icon: ShieldAlert },
-                  { label: "Users actifs",   value: stats.active_users, Icon: Users       },
-                ].map((k, i) => (
-                  <div key={i} className="admin-kpi">
-                    <div className="admin-kpi-icon"><k.Icon size={18} /></div>
-                    <div>
-                      <div className="admin-kpi-val">{k.value}</div>
-                      <div className="admin-kpi-lbl">{k.label}</div>
-                    </div>
-                  </div>
-                ))}
+    {/* ── KPIs ── */}
+    <div className="admin-kpis">
+      {[
+        { label: "Utilisateurs",   value: stats.total_users,  Icon: Users       },
+        { label: "Scans total",     value: stats.total_scans,  Icon: ScanLine    },
+        { label: "Vulnérabilités", value: stats.total_vulns,  Icon: ShieldAlert },
+        { label: "Users actifs",   value: stats.active_users, Icon: Users       },
+      ].map((k, i) => (
+        <div key={i} className="admin-kpi">
+          <div className="admin-kpi-icon"><k.Icon size={18} /></div>
+          <div>
+            <div className="admin-kpi-val">{k.value}</div>
+            <div className="admin-kpi-lbl">{k.label}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* ── Ligne 2 : Utilisateurs récents + Vulnérabilités par module ── */}
+    <div className="admin-row-2">
+
+      {/* Utilisateurs récents */}
+      <div className="admin-box">
+        <div className="admin-box-head">
+          <span>Utilisateurs récents</span>
+          <span className="admin-box-link" onClick={() => setPage("users")}>
+            Voir tous →
+          </span>
+        </div>
+        {stats.recent_users?.map((u, i) => {
+          const COLORS = ["#185FA5","#16A34A","#9333EA","#EF9F27","#E24B4A"];
+          const bg = COLORS[i % COLORS.length];
+          return (
+            <div key={u.id} className="admin-user-row">
+              <div className="admin-avatar" style={{ background: bg }}>
+                {u.username.charAt(0).toUpperCase()}
               </div>
-
-              <div className="admin-row-2">
-                <div className="admin-box">
-                  <div className="admin-box-head">Vulnérabilités par module</div>
-                  {Object.entries(stats.vulns_par_module || {}).map(([mod, count]) => (
-                    <div key={mod} className="admin-bar-row">
-                      <span className="admin-bar-lbl">{mod.toUpperCase()}</span>
-                      <div className="admin-bar-track">
-                        <div className="admin-bar-fill"
-                          style={{ width: `${Math.min(count * 2, 100)}%` }} />
-                      </div>
-                      <span className="admin-bar-val">{count}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="admin-box">
-                  <div className="admin-box-head">Scans par statut</div>
-                  {Object.entries(stats.scans_par_statut || {}).map(([st, count]) => (
-                    <div key={st} className="admin-stat-row">
-                      <span className="admin-stat-lbl">{st}</span>
-                      <span className={`admin-badge ${st === "termine" ? "green" : st === "erreur" ? "red" : "blue"}`}>
-                        {count}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+              <div className="admin-user-info">
+                <div className="admin-user-name">{u.username}</div>
+                <div className="admin-user-email">{u.email}</div>
               </div>
-            </>
-          )}
+              <span className={`admin-badge ${u.role === "admin" ? "red" : "blue"}`}>
+                {u.role === "admin" ? "Admin" : "User"}
+              </span>
+            </div>
+          );
+        })}
+      </div>
 
+      {/* Vulnérabilités par module */}
+      <div className="admin-box">
+        <div className="admin-box-head">Vulnérabilités par module</div>
+        {(() => {
+          const data   = stats.vulns_par_module || {};
+          const max    = Math.max(...Object.values(data), 1);
+          const COLORS = {
+            sqli:    "#E24B4A",
+            xss:     "#EF9F27",
+            headers: "#185FA5",
+            csrf:    "#16A34A",
+          };
+          return Object.entries(data)
+            .sort((a, b) => b[1] - a[1])
+            .map(([mod, count]) => (
+              <div key={mod} className="admin-bar-row">
+                <span className="admin-bar-lbl">{mod.toUpperCase()}</span>
+                <div className="admin-bar-track">
+                  <div className="admin-bar-fill" style={{
+                    width: `${(count / max) * 100}%`,
+                    background: COLORS[mod] || "#185FA5"
+                  }} />
+                </div>
+                <span className="admin-bar-val">{count}</span>
+              </div>
+            ));
+        })()}
+      </div>
+    </div>
+
+    {/* ── Derniers scans ── */}
+    <div className="admin-box" style={{ marginBottom: 14 }}>
+      <div className="admin-box-head">
+        <span>Derniers scans (tous utilisateurs)</span>
+        <span className="admin-box-link" onClick={() => setPage("scans")}>
+          Voir tous →
+        </span>
+      </div>
+      <table className="admin-table">
+        <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>URL</th>
+            <th>Score</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {(stats.recent_scans || []).map((s) => (
+            <tr key={s.id}>
+              <td className="admin-td-bold">{s.username}</td>
+              <td className="admin-td-url">{s.url}</td>
+              <td>
+                <span style={{ color: SCORE_COLOR(s.score_global), fontWeight: 700 }}>
+                  {s.score_global ?? "—"}/100
+                </span>
+              </td>
+              <td className="admin-td-gray">{s.date}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    {/* ── Gestion des modules ── */}
+    <div className="admin-box">
+      <div className="admin-box-head">
+        <span>Gestion des modules</span>
+        <span className="admin-box-link" onClick={() => setPage("modules")}>
+          Voir tous →
+        </span>
+      </div>
+      <table className="admin-table">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Description</th>
+            <th>Statut</th>
+            <th>Activer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {(stats.modules || []).map((m) => (
+            <tr key={m.key}>
+              <td className="admin-td-bold">{m.label}</td>
+              <td className="admin-td-gray">{m.description}</td>
+              <td>
+                <span className={`admin-badge ${m.is_active ? "green" : "red"}`}>
+                  {m.is_active ? "Actif" : "Désactivé"}
+                </span>
+              </td>
+              <td>
+                <button
+                  className="admin-btn-icon"
+                  onClick={async () => {
+                    await toggleModule(m.key);
+                    loadPage("dashboard");
+                  }}
+                >
+                  {m.is_active
+                    ? <ToggleRight size={24} color="#185FA5" />
+                    : <ToggleLeft  size={24} color="#9CB3CC" />}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </>
+)}
           {/* ─── UTILISATEURS ─── */}
           {page === "users" && (
             <>

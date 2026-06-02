@@ -48,6 +48,27 @@ def get_stats():
         func.count(Scan.id)
     ).group_by(Scan.status).all()
 
+    # Utilisateurs récents
+    recent_users_q = User.query.order_by(User.created_at.desc()).limit(3).all()
+    recent_users = [{"id": u.id, "username": u.username, "email": u.email, "role": u.role}
+                    for u in recent_users_q]
+
+    # Derniers scans
+    recent_scans_q = Scan.query.order_by(Scan.date.desc()).limit(4).all()
+    recent_scans = []
+    for s in recent_scans_q:
+        u = User.query.get(s.user_id)
+        recent_scans.append({
+            "id":           s.id,
+            "url":          s.url,
+            "score_global": s.score_global,
+            "date":         s.date.strftime("%d/%m/%Y") if s.date else "",
+            "username":     u.username if u else "inconnu",
+        })
+
+    # Modules
+    modules = [m.to_dict() for m in Module.query.all()]
+
     return jsonify({
         "total_users":      total_users,
         "total_scans":      total_scans,
@@ -55,8 +76,10 @@ def get_stats():
         "active_users":     active_users,
         "vulns_par_module": {m: c for m, c in vulns_par_module},
         "scans_par_statut": {s: c for s, c in scans_par_statut},
+        "recent_users":     recent_users,
+        "recent_scans":     recent_scans,
+        "modules":          modules,
     }), 200
-
 
 # ============================================
 # GET /api/admin/users
