@@ -45,11 +45,6 @@ PAYLOADS_XSS = [
 # ============================================
 
 def est_encode(payload, contenu):
-    """
-    Vérifie si le payload est encodé dans la réponse.
-    Si encodé → site protégé
-    Si brut   → site vulnérable
-    """
     payload_encode = (
         payload
         .replace("<", "&lt;")
@@ -61,13 +56,35 @@ def est_encode(payload, contenu):
 
 
 # ============================================
+# FONCTION : Extraire le contexte HTML autour du payload
+# ============================================
+
+def extraire_html_snippet(contenu, payload, context_chars=300):
+    """
+    Retourne un extrait HTML centré autour du payload injecté.
+    """
+    try:
+        idx = contenu.find(payload)
+        if idx == -1:
+            return None
+        start = max(0, idx - context_chars)
+        end   = min(len(contenu), idx + len(payload) + context_chars)
+        snippet = contenu[start:end].strip()
+        # Nettoyer un peu les espaces excessifs
+        import re
+        snippet = re.sub(r'\n\s*\n', '\n', snippet)
+        return snippet[:800]  # max 800 chars pour le stockage
+    except Exception:
+        return None
+
+
+# ============================================
 # FONCTION : Extraire paramètres URL
 # ============================================
 
 def extraire_parametres(url):
     parametres = {}
     if "?" in url:
-        # Enlever l'ancre (#) si présente
         url_propre = url.split("#")[0]
         base, query = url_propre.split("?", 1)
         for param in query.split("&"):
@@ -97,97 +114,67 @@ def extraire_formulaires(url, session):
 
 def tester_payload_url(url, param, payload, session):
     try:
-        # Enlever l'ancre de l'URL
         url_propre = url.split("#")[0]
         params = extraire_parametres(url)
         params[param] = payload
 
         url_test = url_propre.split("?")[0] + "?" + "&".join(
-            [f"{k}={v}" for k, v in params.items()]
+            f"{k}={v}" for k, v in params.items()
         )
 
         response = session.get(url_test, verify=False, timeout=10)
-        contenu = response.text
+        contenu  = response.text
 
-        # Vérification correcte
         if payload in contenu and not est_encode(payload, contenu):
-            # Payload brut présent → VULNÉRABLE
-            return "vulnerable", url_test
-
+            snippet = extraire_html_snippet(contenu, payload)
+            return "vulnerable", url_test, snippet
         elif est_encode(payload, contenu):
-            # Payload encodé → PROTÉGÉ
-            return "protege", url_test
-
+            return "protege", url_test, None
         else:
-            return "absent", url_test
+            return "non_refleti", url_test, None
 
     except Exception as e:
-        return "erreur", str(e)
+        print(f"  ⚠️  Erreur test URL : {e}")
+        return "erreur", None, None
 
 
 # ============================================
-# FONCTION PRINCIPALE
+# FONCTION PRINCIPALE : scanner_xss
 # ============================================
 
 def scanner_xss(url, cookie=None, username=None, password=None):
-
     print(f"\n{'='*60}")
-    print(f"  SCAN XSS")
-    print(f"  URL cible : {url}")
-    print(f"{'='*60}\n")
+    print(f"  SCANNER XSS")
+    print(f"{'='*60}")
+    print(f"  Cible : {url}\n")
 
     resultats = {
-        "url": url,
-        "vulnerabilites": [],
-        "proteges": [],
-        "payloads_reussis": [],
+        "score":                  100,
+        "vulnerabilites":         [],
+        "payloads_reussis":       [],
         "parametres_vulnerables": [],
-        "score": 100,
-        "erreur": None
+        "proteges":               [],
+        "erreur":                 None
     }
 
-    # ============================================
-    # ÉTAPE 1 : Créer session HTTP
-    # ============================================
     session = requests.Session()
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-    })
 
-    # ============================================
-    # ÉTAPE 2 : Gérer authentification
-    # ============================================
+    # ── Authentification ──────────────────────────────────────────
     if cookie:
-        # Parser et ajouter les cookies
         for part in cookie.split(";"):
             part = part.strip()
             if "=" in part:
-                nom, valeur = part.split("=", 1)
-                session.cookies.set(nom.strip(), valeur.strip())
-        print(f"✅ Cookie configuré\n")
+                name, value = part.split("=", 1)
+                session.cookies.set(name.strip(), value.strip())
+        print(f"🍪 Cookie appliqué\n")
 
     elif username and password:
-        print(f"🔐 Login automatique...")
         try:
-            parties = url.split("/")
-            base_url = parties[0] + "//" + parties[2]
-
-            if "dvwa" in url.lower():
-                login_url = base_url + "/dvwa/login.php"
-            else:
-                login_url = base_url + "/login.php"
-
-            print(f"   URL login : {login_url}")
-
-            session.post(login_url, data={
-                "username": username,
-                "password": password,
-                "Login": "Login"
-            }, verify=False, timeout=10)
-
+            login_url = url.split("/")[0] + "//" + url.split("/")[2] + "/login.php"
+            login_data = {"username": username, "password": password, "Login": "Login"}
+            session.post(login_url, data=login_data, verify=False, timeout=10)
             session.cookies.set("security", "low")
             print(f"✅ Login réussi\n")
-
         except Exception as e:
             print(f"⚠️  Erreur login : {e}\n")
 
@@ -195,9 +182,7 @@ def scanner_xss(url, cookie=None, username=None, password=None):
         print(f"🌐 Site public — pas d'authentification\n")
 
 
-    # ============================================
-    # ÉTAPE 3 : Tester paramètres URL
-    # ============================================
+    # ── ÉTAPE 3 : Tester paramètres URL ─────────────────────────
     parametres = extraire_parametres(url)
 
     if parametres:
@@ -205,20 +190,16 @@ def scanner_xss(url, cookie=None, username=None, password=None):
         print(f"Test de {len(PAYLOADS_XSS)} payloads par paramètre...\n")
 
         for param in parametres:
-
-            # Ignorer les tokens CSRF
             if any(mot in param.lower() for mot in ["token", "csrf", "nonce"]):
                 print(f"  ⏭️  Paramètre '{param}' ignoré (token de sécurité)")
                 continue
 
             print(f"  → Test paramètre : '{param}'")
             vulnerable = False
-            protege = False
+            protege    = False
 
             for payload in PAYLOADS_XSS:
-                statut, url_test = tester_payload_url(
-                    url, param, payload, session
-                )
+                statut, url_test, html_snippet = tester_payload_url(url, param, payload, session)
 
                 if statut == "vulnerable":
                     print(f"  ❌ VULNÉRABLE !")
@@ -226,12 +207,14 @@ def scanner_xss(url, cookie=None, username=None, password=None):
                     print(f"     URL     : {url_test}\n")
 
                     resultats["vulnerabilites"].append({
-                        "type": "XSS Reflected",
-                        "gravite": "CRITIQUE",
-                        "parametre": param,
-                        "payload": payload,
-                        "url": url_test,
-                        "solution": "Utiliser htmlspecialchars() pour encoder les sorties"
+                        "type":         "XSS Reflected",
+                        "gravite":      "CRITIQUE",
+                        "parametre":    param,
+                        "payload":      payload,
+                        "url":          url_test,
+                        "url_test":     url_test,
+                        "html_snippet": html_snippet,
+                        "solution":     "Utiliser htmlspecialchars() pour encoder les sorties. Implémenter une Content Security Policy (CSP)."
                     })
                     resultats["payloads_reussis"].append(payload)
                     resultats["parametres_vulnerables"].append(param)
@@ -253,36 +236,31 @@ def scanner_xss(url, cookie=None, username=None, password=None):
         print(f"ℹ️  Aucun paramètre dans l'URL\n")
 
 
-    # ============================================
-    # ÉTAPE 4 : Tester formulaires
-    # ============================================
+    # ── ÉTAPE 4 : Tester formulaires ─────────────────────────────
     print(f"Recherche de formulaires...")
     formulaires = extraire_formulaires(url, session)
     print(f"Formulaires trouvés : {len(formulaires)}\n")
 
     for i, form in enumerate(formulaires):
-        action = form.get("action", "")
+        action  = form.get("action", "")
         methode = form.get("method", "get").lower()
-        inputs = form.find_all("input")
+        inputs  = form.find_all("input")
 
-        # Construire l'URL d'action complète
         if not action or action == "#":
             action_url = url.split("?")[0]
         elif action.startswith("http"):
             action_url = action
         else:
-            parties = url.split("/")
-            base = parties[0] + "//" + parties[2]
+            parties    = url.split("/")
+            base       = parties[0] + "//" + parties[2]
             action_url = base + "/" + action.lstrip("/")
 
         print(f"  Formulaire {i+1} — action={action_url} méthode={methode}")
 
         for inp in inputs:
-            nom = inp.get("name", "")
-            type_inp = inp.get("type", "text")
-            valeur_defaut = inp.get("value", "test")
+            nom       = inp.get("name", "")
+            type_inp  = inp.get("type", "text")
 
-            # Ignorer les champs non textuels et les tokens
             if not nom:
                 continue
             if type_inp in ["submit", "button", "image", "file"]:
@@ -295,91 +273,58 @@ def scanner_xss(url, cookie=None, username=None, password=None):
 
             for payload in PAYLOADS_XSS:
                 try:
-                    # Construire les données du formulaire
                     data = {}
                     for inp2 in inputs:
                         nom2 = inp2.get("name", "")
                         if nom2:
                             data[nom2] = inp2.get("value", "test")
 
-                    # Injecter le payload dans le champ testé
                     data[nom] = payload
 
                     if methode == "post":
-                        response = session.post(
-                            action_url,
-                            data=data,
-                            verify=False,
-                            timeout=10
-                        )
+                        response = session.post(action_url, data=data, verify=False, timeout=10)
                     else:
-                        response = session.get(
-                            action_url,
-                            params=data,
-                            verify=False,
-                            timeout=10
-                        )
+                        response = session.get(action_url, params=data, verify=False, timeout=10)
 
                     contenu = response.text
 
                     if payload in contenu and not est_encode(payload, contenu):
-                        print(f"    ❌ VULNÉRABLE ! Payload : {payload}\n")
-                        resultats["vulnerabilites"].append({
-                            "type": "XSS via formulaire",
-                            "gravite": "CRITIQUE",
-                            "parametre": nom,
-                            "payload": payload,
-                            "solution": "Encoder les entrées avec htmlspecialchars()"
-                        })
-                        resultats["score"] = 0
-                        break
+                        html_snippet = extraire_html_snippet(contenu, payload)
+                        url_test_form = action_url + ("?" + "&".join(f"{k}={v}" for k, v in data.items()) if methode == "get" else "")
 
-                    elif est_encode(payload, contenu):
-                        print(f"    ✅ Champ '{nom}' — encodage correct\n")
-                        resultats["proteges"].append(nom)
+                        print(f"    ❌ VULNÉRABLE ! Champ='{nom}' Payload={payload}\n")
+
+                        resultats["vulnerabilites"].append({
+                            "type":         "XSS Stored/Reflected (formulaire)",
+                            "gravite":      "CRITIQUE",
+                            "parametre":    nom,
+                            "payload":      payload,
+                            "url":          action_url,
+                            "url_test":     url_test_form,
+                            "html_snippet": html_snippet,
+                            "solution":     "Encoder les sorties HTML avec htmlspecialchars(). Valider et filtrer toutes les entrées côté serveur. Implémenter une CSP stricte."
+                        })
+                        resultats["payloads_reussis"].append(payload)
+                        if nom not in resultats["parametres_vulnerables"]:
+                            resultats["parametres_vulnerables"].append(nom)
+                        resultats["score"] = 0
                         break
 
                 except Exception as e:
                     print(f"    ⚠️  Erreur : {e}")
                     continue
 
-
-    # ============================================
-    # ÉTAPE 5 : Résultat final
-    # ============================================
+    # ── Résultat final ────────────────────────────────────────────
     print(f"\n{'='*60}")
     print(f"  RÉSULTAT FINAL XSS")
     print(f"{'='*60}")
 
     if resultats["vulnerabilites"]:
-        print(f"  ❌ VULNÉRABLE au XSS !")
-        print(f"  Vulnérabilités : {len(resultats['vulnerabilites'])}\n")
-        for v in resultats["vulnerabilites"]:
-            print(f"  → Type      : {v['type']}")
-            print(f"    Paramètre : {v['parametre']}")
-            print(f"    Payload   : {v['payload']}")
-            print(f"    Solution  : {v['solution']}\n")
+        print(f"  ❌ {len(resultats['vulnerabilites'])} vulnérabilité(s) XSS détectée(s)")
     else:
         print(f"  ✅ Aucune vulnérabilité XSS détectée")
 
-    if resultats["proteges"]:
-        print(f"  Paramètres protégés : {resultats['proteges']}")
-
-    # Calcul score final
-    total = len(resultats["vulnerabilites"]) + len(resultats["proteges"])
-    if total > 0:
-        proteges_count = len(resultats["proteges"])
-        resultats["score"] = int((proteges_count / total) * 100)
-
-    print(f"\n  Score sécurité : {resultats['score']}/100")
-
-    if resultats["score"] == 100:
-        print(f"  Niveau : 🟢 BON")
-    elif resultats["score"] >= 50:
-        print(f"  Niveau : 🟡 MOYEN")
-    else:
-        print(f"  Niveau : 🔴 FAIBLE")
-
+    print(f"  Score : {resultats['score']}/100")
     print(f"{'='*60}\n")
 
     return resultats
@@ -389,25 +334,21 @@ def scanner_xss(url, cookie=None, username=None, password=None):
 # LANCEMENT DIRECT
 # ============================================
 if __name__ == "__main__":
-
-    url = input("Entrez l'URL à scanner : ")
+    url = input("Entrez l'URL à scanner : ").strip()
     if not url.startswith("http"):
         url = "http://" + url
 
-    auth = input("\nLe site nécessite une authentification ? (o/n) : ").lower()
+    auth = input("\nLe site nécessite-t-il une authentification ? (o/n) : ").strip().lower()
 
     if auth == "o":
         choix = input("Cookie manuel ou login automatique ? (cookie/login) : ").lower()
-
         if choix == "cookie":
             cookie = input("Entrez votre cookie (ex: security=low; PHPSESSID=xxx) : ")
             scanner_xss(url, cookie=cookie)
-
         elif choix == "login":
             username = input("Username : ")
             password = input("Password : ")
             scanner_xss(url, username=username, password=password)
-
         else:
             print("Choix invalide — scan sans authentification")
             scanner_xss(url)

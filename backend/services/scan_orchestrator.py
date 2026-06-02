@@ -3,7 +3,6 @@
 import sys
 import os
 
-# Ajouter le dossier scanners au path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'scanners'))
 
 from scanner_headers import scanner_headers
@@ -33,13 +32,13 @@ def lancer_scan(url, modules, user_id, cookie=None):
 
     if not modules:
         raise Exception("Aucun module actif disponible")
-    
+
     # ── Créer l'entrée scan en base ──────────────────────────────
     scan = Scan(
-        user_id  = user_id,
-        url      = url,
-        status   = "en_cours",
-        modules  = ",".join(modules)
+        user_id = user_id,
+        url     = url,
+        status  = "en_cours",
+        modules = ",".join(modules)
     )
     db.session.add(scan)
     db.session.commit()
@@ -72,29 +71,16 @@ def lancer_scan(url, modules, user_id, cookie=None):
             scan.score_csrf = res.get("score", 0)
             scores.append(res.get("score", 0))
 
-            for form in res.get("formulaires", []):
-                for v in form.get("vulnerabilites", []):
-                    vuln = Vulnerability(
-                        scan_id  = scan.id,
-                        module   = "csrf",
-                        type     = v.get("type", ""),
-                        gravite  = v.get("gravite", "MOYENNE"),
-                        detail   = v.get("detail", ""),
-                        solution = "Ajouter un token CSRF à chaque formulaire"
-                    )
-                    db.session.add(vuln)
-
-            for ck in res.get("cookies", []):
-                for v in ck.get("vulnerabilites", []):
-                    vuln = Vulnerability(
-                        scan_id  = scan.id,
-                        module   = "csrf",
-                        type     = v.get("type", ""),
-                        gravite  = v.get("gravite", "ÉLEVÉE"),
-                        detail   = v.get("detail", ""),
-                        solution = "Configurer les attributs Secure, HttpOnly, SameSite"
-                    )
-                    db.session.add(vuln)
+            for v in res.get("vulnerabilites", []):
+                vuln = Vulnerability(
+                    scan_id  = scan.id,
+                    module   = "csrf",
+                    type     = v.get("type", "CSRF"),
+                    gravite  = v.get("gravite", "ÉLEVÉE"),
+                    detail   = v.get("detail", ""),
+                    solution = v.get("solution", "")
+                )
+                db.session.add(vuln)
 
         # ── Module XSS ───────────────────────────────────────────
         if "xss" in modules:
@@ -105,14 +91,16 @@ def lancer_scan(url, modules, user_id, cookie=None):
 
             for v in res.get("vulnerabilites", []):
                 vuln = Vulnerability(
-                    scan_id   = scan.id,
-                    module    = "xss",
-                    type      = v.get("type", "XSS Reflected"),
-                    gravite   = v.get("gravite", "CRITIQUE"),
-                    detail    = f"Paramètre : {v.get('parametre', '')}",
-                    solution  = v.get("solution", ""),
-                    parametre = v.get("parametre", ""),
-                    payload   = v.get("payload", "")
+                    scan_id      = scan.id,
+                    module       = "xss",
+                    type         = v.get("type", "XSS Reflected"),
+                    gravite      = v.get("gravite", "CRITIQUE"),
+                    detail       = f"Paramètre : {v.get('parametre', '')}",
+                    solution     = v.get("solution", ""),
+                    parametre    = v.get("parametre", ""),
+                    payload      = v.get("payload", ""),
+                    html_snippet = v.get("html_snippet", None),
+                    url_test     = v.get("url_test", v.get("url", None))
                 )
                 db.session.add(vuln)
 
