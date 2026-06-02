@@ -6,11 +6,20 @@ import Register  from "./pages/Register";
 import Home      from "./pages/Home";
 import ScanPage  from "./pages/ScanPage";
 import History   from "./pages/History";
+import AdminPage from "./pages/AdminPage";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div>Chargement...</div>;
   return user ? children : <Navigate to="/login" />;
+}
+
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div>Chargement...</div>;
+  if (!user) return <Navigate to="/login" />;
+  if (user.role !== "admin") return <Navigate to="/" />;
+  return children;
 }
 
 export default function App() {
@@ -28,6 +37,9 @@ export default function App() {
           }/>
           <Route path="/history" element={
             <ProtectedRoute><History /></ProtectedRoute>
+          }/>
+          <Route path="/admin" element={
+            <AdminRoute><AdminPage /></AdminRoute>
           }/>
         </Routes>
       </BrowserRouter>

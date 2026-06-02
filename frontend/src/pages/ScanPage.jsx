@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";  // ← ajoute useEffect
 import { useNavigate } from "react-router-dom";
 import {
   Shield, KeyRound, Zap, Database,
@@ -34,7 +34,15 @@ export default function ScanPage() {
   const [error, setError]         = useState("");
   const [activeTab, setActiveTab] = useState("tous");
   const navigate                  = useNavigate();
+  const [modulesActifs, setModulesActifs] = useState(["headers","csrf","xss","sqli"]);
 
+useEffect(() => {
+  api.get("/scans/modules/actifs").then(res => {
+    setModulesActifs(res.data.modules);
+    // Garder seulement les modules actifs dans la sélection
+    setModules(prev => prev.filter(m => res.data.modules.includes(m)));
+  }).catch(() => {});
+}, []);
   const toggleModule = (id) => {
     setModules((prev) =>
       prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id]
@@ -125,24 +133,30 @@ export default function ScanPage() {
               <label className="scan-label">Modules à lancer</label>
               <div className="scan-modules-grid">
                 {MODULES.map((m) => {
-                  const selected = modules.includes(m.id);
-                  return (
-                    <div
-                      key={m.id}
-                      onClick={() => toggleModule(m.id)}
-                      className={`scan-module-card${selected ? " selected" : ""}`}
-                    >
-                      <div className="scan-module-icon-wrap">
-                        <m.Icon size={20} color={selected ? "#185FA5" : "#718096"} />
-                      </div>
-                      <div>
-                        <div className="scan-module-label">{m.label}</div>
-                        <div className="scan-module-desc">{m.desc}</div>
-                      </div>
-                      <div className={`scan-checkbox${selected ? " checked" : ""}`} />
-                    </div>
-                  );
-                })}
+  const selected = modules.includes(m.id);
+  const disabled = !modulesActifs.includes(m.id);
+  return (
+    <div
+      key={m.id}
+      onClick={() => !disabled && toggleModule(m.id)}
+      className={`scan-module-card${selected ? " selected" : ""}${disabled ? " disabled" : ""}`}
+    >
+      <div className="scan-module-icon-wrap">
+        <m.Icon size={20} color={disabled ? "#CBD5E1" : selected ? "#185FA5" : "#718096"} />
+      </div>
+      <div>
+        <div className="scan-module-label"
+          style={{ color: disabled ? "#CBD5E1" : undefined }}>
+          {m.label}
+        </div>
+        <div className="scan-module-desc">
+          {disabled ? "Désactivé par l'admin" : m.desc}
+        </div>
+      </div>
+      <div className={`scan-checkbox${selected && !disabled ? " checked" : ""}`} />
+    </div>
+  );
+})}
               </div>
             </div>
 

@@ -387,3 +387,9 @@
   word-break: break-all;
   font-family: monospace;
 }
+.scan-module-card.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #F7F9FC;
+  border-color: #E2E8F0;
+}

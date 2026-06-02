@@ -21,7 +21,19 @@ def lancer_scan(url, modules, user_id, cookie=None):
     Lance les scanners sélectionnés et sauvegarde les résultats en base.
     modules : liste ex. ["headers", "csrf", "xss", "sqli"]
     """
+    from models.module import Module
+    modules_actifs = []
+    for m in modules:
+        mod = Module.query.filter_by(key=m).first()
+        if mod and not mod.is_active:
+            print(f"Module {m} désactivé par l'admin — ignoré")
+        else:
+            modules_actifs.append(m)
+    modules = modules_actifs
 
+    if not modules:
+        raise Exception("Aucun module actif disponible")
+    
     # ── Créer l'entrée scan en base ──────────────────────────────
     scan = Scan(
         user_id  = user_id,

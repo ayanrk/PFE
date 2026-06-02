@@ -8,6 +8,8 @@ class User(db.Model):
     username   = db.Column(db.String(80), unique=True, nullable=False)
     email      = db.Column(db.String(120), unique=True, nullable=False)
     password   = db.Column(db.String(255), nullable=False)
+    role       = db.Column(db.String(20), default="user")   # ← NOUVEAU
+    is_active  = db.Column(db.Boolean, default=True)        # ← NOUVEAU
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relation : un user peut avoir plusieurs scans
@@ -18,5 +20,7 @@ class User(db.Model):
             "id":         self.id,
             "username":   self.username,
             "email":      self.email,
+            "role":       self.role,        # ← cette ligne doit exister
+            "is_active":  self.is_active,
             "created_at": self.created_at.strftime("%Y-%m-%d %H:%M")
         }

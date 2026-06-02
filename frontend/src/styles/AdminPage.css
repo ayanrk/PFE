@@ -1,0 +1,277 @@
+/* ── AdminPage.css ── */
+
+.admin-page {
+  min-height: 100vh;
+  background: #F4F8FF;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 60px);
+}
+
+/* ─── Sidebar ─── */
+.admin-sidebar {
+  background: #0C2A4A;
+  padding: 1.5rem 0;
+}
+
+.admin-sidebar-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 0 1.25rem 1rem;
+}
+
+.admin-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 1.25rem;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background 0.15s, color 0.15s;
+}
+
+.admin-menu-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: white;
+}
+
+.admin-menu-item.active {
+  background: rgba(24,95,165,0.25);
+  color: white;
+  border-left-color: #185FA5;
+}
+
+/* ─── Main ─── */
+.admin-main {
+  padding: 2rem;
+  overflow: auto;
+}
+
+.admin-page-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0C2A4A;
+  margin-bottom: 4px;
+}
+
+.admin-page-sub {
+  font-size: 13px;
+  color: #6B8CAE;
+  margin-bottom: 1.5rem;
+}
+
+/* ─── KPIs ─── */
+.admin-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.admin-kpi {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  border: 1px solid #DDE8F5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-kpi-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: #EBF4FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #185FA5;
+  flex-shrink: 0;
+}
+
+.admin-kpi-val {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0C2A4A;
+  line-height: 1;
+}
+
+.admin-kpi-lbl {
+  font-size: 11px;
+  color: #6B8CAE;
+  margin-top: 3px;
+}
+
+/* ─── Row 2 cols ─── */
+.admin-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* ─── Box ─── */
+.admin-box {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #DDE8F5;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.admin-box-head {
+  padding: 0.9rem 1.1rem;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0C2A4A;
+  border-bottom: 1px solid #F0F6FF;
+}
+
+/* ─── Bar chart ─── */
+.admin-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 1.1rem;
+}
+
+.admin-bar-lbl {
+  font-size: 11.5px;
+  color: #4A6A8A;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.admin-bar-track {
+  flex: 1;
+  height: 8px;
+  background: #F0F6FF;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.admin-bar-fill {
+  height: 100%;
+  background: #185FA5;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.admin-bar-val {
+  font-size: 11px;
+  color: #6B8CAE;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ─── Stat row ─── */
+.admin-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 1.1rem;
+  border-bottom: 1px solid #F5F8FF;
+}
+
+.admin-stat-lbl {
+  font-size: 13px;
+  color: #4A6A8A;
+}
+
+/* ─── Table ─── */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  padding: 8px 14px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #9CB3CC;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  background: #F8FBFF;
+  border-bottom: 1px solid #EDF4FF;
+}
+
+.admin-table td {
+  padding: 9px 14px;
+  font-size: 13px;
+  color: #3A5068;
+  border-bottom: 1px solid #F5F8FF;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tr:hover td {
+  background: #FAFCFF;
+}
+
+.admin-td-bold { font-weight: 600; color: #0C2A4A; }
+.admin-td-gray { color: #6B8CAE; }
+.admin-td-url  { color: #185FA5; font-family: monospace; font-size: 12px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-td-sm   { font-size: 12px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ─── Badges ─── */
+.admin-badge {
+  display: inline-block;
+  border-radius: 5px;
+  padding: 3px 9px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.admin-badge.green  { background: #EBFAF0; color: #16A34A; }
+.admin-badge.red    { background: #FCEBEB; color: #A32D2D; }
+.admin-badge.blue   { background: #EBF4FF; color: #185FA5; }
+.admin-badge.orange { background: #FEF3E2; color: #A16207; }
+
+/* ─── Select rôle ─── */
+.admin-select {
+  border: 1.5px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #0C2A4A;
+  background: white;
+  outline: none;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.admin-select:focus { border-color: #185FA5; }
+
+/* ─── Actions ─── */
+.admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.admin-btn-icon:hover { background: #F0F6FF; }

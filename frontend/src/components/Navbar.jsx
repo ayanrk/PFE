@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { ShieldCheck } from "lucide-react";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
@@ -16,6 +17,7 @@ export default function Navbar() {
     { path: "/",        label: "Accueil"    },
     { path: "/scan",    label: "Scanner"    },
     { path: "/history", label: "Historique" },
+    // ← Admin retiré d'ici
   ];
 
   return (
@@ -40,6 +42,17 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Visible uniquement pour l'admin */}
+          {user?.role === "admin" && (
+            <Link
+              to="/admin"
+              className={`navbar-link navbar-link-admin ${location.pathname === "/admin" ? "active" : ""}`}
+            >
+              <ShieldCheck size={14} />
+              Admin
+            </Link>
+          )}
         </div>
 
         <div className="navbar-user">
