@@ -16,56 +16,87 @@
 
 /* ── Sidebar ─────────────────────────────────────────────────────── */
 .history-sidebar {
-  background: #fff;
-  border-right: 1px solid #E2E8F0;
+  background: #0C2A4A;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: 1.5rem 0;
 }
 
 .history-sidebar-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 20px 16px 12px;
-  border-bottom: 1px solid #E2E8F0;
+  padding: 0 1.25rem 1rem;
 }
 
 .history-sidebar-title {
-  font-size: 15px;
+  font-size: 10px;
   font-weight: 700;
-  color: #0F172A;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
   margin: 0;
 }
 
+/* Items de la liste d'historique */
+.history-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 1.25rem;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background 0.15s, color 0.15s;
+}
+
+.history-menu-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: rgb(255, 255, 255);
+}
+
+.history-menu-item.active {
+  background: rgba(24,95,165,0.25);
+  color: rgb(255, 255, 255);
+  border-left-color: #185FA5;
+}
 /* ── Tabs ─────────────────────────────────────────────────────────── */
 .history-tabs {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 8px;
-  border-bottom: 1px solid #E2E8F0;
+  padding: 8px 0;
 }
 
 .history-tab {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 10px;
+  padding: 10px 1.25rem;
   border: none;
   background: transparent;
-  border-radius: 8px;
+  border-left: 2px solid transparent;
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  color: #64748B;
-  transition: all 0.15s;
+  color: rgba(255,255,255,0.5);
+  transition: background 0.15s, color 0.15s;
   text-align: left;
 }
 
-.history-tab:hover { background: #F1F5F9; color: #0F172A; }
-.history-tab.active { background: #EFF6FF; color: #1D4ED8; font-weight: 600; }
+.history-tab:hover {
+  background: rgba(255,255,255,0.05);
+  color: white;
+}
 
+.history-tab.active {
+  background: rgba(24,95,165,0.25);
+  color: white;
+  font-weight: 600;
+  border-left-color: #185FA5;
+}
 /* ── Scan list ────────────────────────────────────────────────────── */
 .history-scan-list {
   flex: 1;

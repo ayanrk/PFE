@@ -273,7 +273,7 @@ export default function History() {
         {/* ── Sidebar gauche ── */}
         <div className="history-sidebar">
           <div className="history-sidebar-header">
-            <ClipboardList size={16} />
+            <ClipboardList size={1} />
             <h1 className="history-sidebar-title">Historique des scans</h1>
           </div>
 

@@ -41,7 +41,7 @@
 
 .admin-menu-item:hover {
   background: rgba(255,255,255,0.05);
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 .admin-menu-item.active {
