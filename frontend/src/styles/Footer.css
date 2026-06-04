@@ -1,0 +1,123 @@
+/* ── Footer.css ── */
+
+.footer {
+  background: #0C2A4A;
+  font-family: 'Segoe UI', sans-serif;
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.75rem 2rem 2rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+}
+
+/* ── Marque ── */
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-bottom: 0.9rem;
+}
+
+.footer-logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+}
+
+.footer-tagline {
+  font-size: 13px;
+  color: #6B8CAE;
+  line-height: 1.7;
+  max-width: 300px;
+}
+
+/* ── Colonnes ── */
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.footer-col-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 0.4rem;
+}
+
+.footer-link {
+  font-size: 13px;
+  color: #9CB3CC;
+  text-decoration: none;
+  transition: color 0.15s;
+  width: fit-content;
+}
+
+.footer-link:hover {
+  color: white;
+}
+
+.footer-link-static {
+  cursor: default;
+}
+.footer-link-static:hover {
+  color: #9CB3CC;
+}
+
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Bas de page ── */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-bottom-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: #6B8CAE;
+}
+
+.footer-bottom-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #9CB3CC;
+  font-weight: 600;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem;
+  }
+  .footer-bottom-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+}

@@ -11,6 +11,7 @@ import {
 import Navbar from "../components/Navbar";
 import api   from "../services/api";
 import "../styles/DashboardPage.css";
+import Footer from "../components/Footer";
 
 const MODULE_COLORS = {
   headers: "#185FA5",
@@ -311,6 +312,7 @@ export default function DashboardPage() {
         </div>
 
       </div>
+      <Footer />
     </div>
   );
 }

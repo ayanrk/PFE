@@ -4,6 +4,7 @@ import { Shield, KeyRound, Zap, Database, Rocket, ClipboardList } from "lucide-r
 import Navbar from "../components/Navbar";
 import shieldImg from "../assets/cyber home.png"; // ← ton image
 import "../styles/Home.css";
+import Footer from "../components/Footer";
 
 const STATS = [
   { value: "4",    label: "Modules de scan"        },
@@ -166,10 +167,7 @@ export default function Home() {
         </button>
       </div>
 
-      {/* ── Footer ── */}
-      <footer className="home-footer">
-        <p>PFE Scanner — Projet de Fin d'Études 2025/2026 — Licence Développement Informatique</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
 import Navbar from "../components/Navbar";
 import api from "../services/api";
 import "../styles/ScanPage.css";
+import Footer from "../components/Footer";
 
 const MODULES = [
   { id: "headers", Icon: Shield,   label: "HTTP Headers",  desc: "Headers de sécurité"      },
@@ -294,6 +295,7 @@ useEffect(() => {
           </div>
         )}
       </div>
+       <Footer />
     </div>
   );
 }

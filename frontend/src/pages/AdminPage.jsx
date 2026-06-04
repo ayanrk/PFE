@@ -12,7 +12,7 @@ import {
 } from "../services/adminService";
 import Navbar from "../components/Navbar";
 import "../styles/AdminPage.css";
-
+import Footer from "../components/Footer";
 const MENU = [
   { key: "dashboard",       label: "Tableau de bord", Icon: LayoutDashboard },
   { key: "users",           label: "Utilisateurs",    Icon: Users           },
@@ -473,6 +473,7 @@ export default function AdminPage() {
 
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

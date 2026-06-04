@@ -9,6 +9,7 @@ import {
 import Navbar from "../components/Navbar";
 import api from "../services/api";
 import "../styles/History.css";
+import Footer from "../components/Footer";
 
 const TABS = [
   { id: "tous",    label: "Tous les scans", Icon: ClipboardList },
@@ -488,6 +489,7 @@ export default function History() {
           ) : null}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
