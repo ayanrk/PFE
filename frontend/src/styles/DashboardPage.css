@@ -1,0 +1,246 @@
+/* ── DashboardPage.css ── */
+
+.dash-page {
+  min-height: 100vh;
+  background: #F4F8FF;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.dash-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ─── Header ─── */
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.dash-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0C2A4A;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.dash-sub {
+  font-size: 13px;
+  color: #6B8CAE;
+}
+
+.dash-scan-btn {
+  background: #185FA5;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.18s;
+}
+
+.dash-scan-btn:hover { background: #0C447C; }
+
+/* ─── KPIs ─── */
+.dash-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.dash-kpi {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  border: 1px solid #DDE8F5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dash-kpi-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dash-kpi-val {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dash-kpi-lbl {
+  font-size: 11px;
+  color: #6B8CAE;
+  margin-top: 3px;
+}
+
+.dash-kpi-trend {
+  font-size: 10.5px;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+/* ─── Box ─── */
+.dash-box {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #DDE8F5;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.dash-box-head {
+  padding: 0.85rem 1.1rem;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0C2A4A;
+  border-bottom: 1px solid #F0F6FF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dash-box-link {
+  font-size: 12px;
+  color: #185FA5;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dash-box-link:hover { color: #0C447C; }
+
+/* ─── Layouts ─── */
+.dash-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.dash-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 14px;
+}
+
+/* ─── Sites analysés ─── */
+.dash-site-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 1.1rem;
+  border-bottom: 1px solid #F5F8FF;
+}
+
+.dash-site-row:last-child { border-bottom: none; }
+
+.dash-site-label {
+  font-size: 10.5px;
+  color: #9CB3CC;
+  margin-bottom: 3px;
+}
+
+.dash-site-url {
+  font-size: 12.5px;
+  color: #185FA5;
+  font-family: 'Courier New', monospace;
+}
+
+.dash-site-score {
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+/* ─── Table ─── */
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dash-table th {
+  padding: 7px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #9CB3CC;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  background: #F8FBFF;
+  border-bottom: 1px solid #EDF4FF;
+}
+
+.dash-table td {
+  padding: 9px 14px;
+  font-size: 12.5px;
+  color: #3A5068;
+  border-bottom: 1px solid #F5F8FF;
+}
+
+.dash-table tr:last-child td { border-bottom: none; }
+.dash-table tr:hover td { background: #FAFCFF; }
+
+.dash-td-url {
+  color: #185FA5;
+  font-family: monospace;
+  font-size: 12px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-td-gray { color: #6B8CAE; font-size: 11.5px; }
+
+/* ─── Empty ─── */
+.dash-empty {
+  text-align: center;
+  color: #9CB3CC;
+  font-size: 13px;
+  padding: 2rem;
+}
+
+/* ─── Loading ─── */
+.dash-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 1rem;
+  color: #6B8CAE;
+  font-size: 14px;
+}
+
+.dash-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #DDE8F5;
+  border-top-color: #185FA5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";  // ← ajoute useEffect
 import { useNavigate } from "react-router-dom";
 import {
   Shield, KeyRound, Zap, Database,
-  Rocket, Loader2, FileText, CheckCircle2, Lightbulb
+  Rocket, Loader2, FileText, CheckCircle2, Lightbulb, LayoutDashboard              
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import api from "../services/api";
@@ -193,11 +193,16 @@ useEffect(() => {
         {results && (
           <div>
             <div className="scan-results-header">
-              <h2 className="scan-results-title">Résultats du scan</h2>
-              <button onClick={handlePDF} className="scan-pdf-btn">
-                <FileText size={14} /> Télécharger PDF
-              </button>
-            </div>
+  <h2 className="scan-results-title">Résultats du scan</h2>
+  <div style={{ display: "flex", gap: 10 }}>
+    <button onClick={() => navigate("/dashboard")} className="scan-dash-btn">
+      <LayoutDashboard size={14} /> Mon tableau de bord
+    </button>
+    <button onClick={handlePDF} className="scan-pdf-btn">
+      <FileText size={14} /> Télécharger PDF
+    </button>
+  </div>
+</div>
 
             <div className="scan-scores-grid">
               {/* Score global */}

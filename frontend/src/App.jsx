@@ -7,7 +7,8 @@ import Home      from "./pages/Home";
 import ScanPage  from "./pages/ScanPage";
 import History   from "./pages/History";
 import AdminPage from "./pages/AdminPage";
-
+import DashboardPage from "./pages/DashboardPage";
+ 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div>Chargement...</div>;
@@ -40,6 +41,9 @@ export default function App() {
           }/>
           <Route path="/admin" element={
             <AdminRoute><AdminPage /></AdminRoute>
+          }/>
+          <Route path="/dashboard" element={
+             <ProtectedRoute><DashboardPage /></ProtectedRoute>
           }/>
         </Routes>
       </BrowserRouter>

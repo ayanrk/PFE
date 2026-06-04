@@ -45,7 +45,9 @@ def create_app():
 
     from routes.admin_routes import admin_bp
     app.register_blueprint(admin_bp, url_prefix="/api/admin")
-
+    from routes.dashboard_routes import dashboard_bp
+    app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
+    
     @app.route("/api/test")
     def test():
         return {"message": "Backend PFE Scanner opérationnel", "status": "ok"}

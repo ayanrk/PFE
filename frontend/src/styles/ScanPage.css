@@ -393,3 +393,20 @@
   background: #F7F9FC;
   border-color: #E2E8F0;
 }
+.scan-dash-btn {
+  background: #EBF4FF;
+  color: #185FA5;
+  border: 1.5px solid #B5D4F4;
+  border-radius: 9px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.18s;
+}
+
+.scan-dash-btn:hover { background: #D6EAFF; }

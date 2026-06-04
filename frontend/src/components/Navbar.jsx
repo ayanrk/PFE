@@ -16,6 +16,7 @@ export default function Navbar() {
   const navLinks = [
     { path: "/",        label: "Accueil"    },
     { path: "/scan",    label: "Scanner"    },
+    { path: "/dashboard", label: "Dashboard"  },
     { path: "/history", label: "Historique" },
     // ← Admin retiré d'ici
   ];
