@@ -2,22 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate }         from "react-router-dom";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, PieChart, Pie,
-  Cell, BarChart, Bar, Legend
+  Tooltip, ResponsiveContainer, BarChart, Bar, Cell
 } from "recharts";
 import {
-  ScanLine, ShieldAlert, TrendingUp, Target, LayoutDashboard
+  ScanLine, ShieldAlert, TrendingUp, Target,
+  LayoutDashboard, Trophy, AlertTriangle, Clock
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import api   from "../services/api";
 import "../styles/DashboardPage.css";
-
-const GRAVITE_COLORS = {
-  CRITIQUE: "#E24B4A",
-  ÉLEVÉE:   "#EF9F27",
-  MOYENNE:  "#185FA5",
-  FAIBLE:   "#16A34A",
-};
 
 const MODULE_COLORS = {
   headers: "#185FA5",
@@ -27,13 +20,11 @@ const MODULE_COLORS = {
 };
 
 export default function DashboardPage() {
-  const navigate  = useNavigate();
+  const navigate            = useNavigate();
   const [data, setData]     = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadDashboard();
-  }, []);
+  useEffect(() => { loadDashboard(); }, []);
 
   const loadDashboard = async () => {
     try {
@@ -163,48 +154,38 @@ export default function DashboardPage() {
                     axisLine={false}
                   />
                   <Tooltip
-  content={({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      const score = payload[0].value;
-      const url   = payload[0].payload.url;
-      const color = score >= 80 ? "#16A34A" : score >= 50 ? "#EF9F27" : "#E24B4A";
-      return (
-        <div style={{
-          background: "white",
-          border: "1px solid #DDE8F5",
-          borderRadius: 8,
-          padding: "10px 14px",
-          fontSize: 12,
-          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-          maxWidth: 220,
-        }}>
-          <div style={{ color: "#9CB3CC", marginBottom: 6, fontSize: 11 }}>
-            {label}
-          </div>
-          <div style={{ color, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>
-            Score : {score}/100
-          </div>
-          {url && (
-            <div style={{
-              color: "#185FA5",
-              fontFamily: "monospace",
-              fontSize: 11,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              borderTop: "1px solid #F0F6FF",
-              paddingTop: 6,
-              marginTop: 4,
-            }}>
-              {url}
-            </div>
-          )}
-        </div>
-      );
-    }
-    return null;
-  }}
-/>
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const score = payload[0].value;
+                        const url   = payload[0].payload.url;
+                        const color = score >= 80 ? "#16A34A" : score >= 50 ? "#EF9F27" : "#E24B4A";
+                        return (
+                          <div style={{
+                            background: "white", border: "1px solid #DDE8F5",
+                            borderRadius: 8, padding: "10px 14px", fontSize: 12,
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.08)", maxWidth: 220,
+                          }}>
+                            <div style={{ color: "#9CB3CC", marginBottom: 6, fontSize: 11 }}>
+                              {label}
+                            </div>
+                            <div style={{ color, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>
+                              Score : {score}/100
+                            </div>
+                            {url && (
+                              <div style={{
+                                color: "#185FA5", fontFamily: "monospace", fontSize: 11,
+                                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                                borderTop: "1px solid #F0F6FF", paddingTop: 6, marginTop: 4,
+                              }}>
+                                {url}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
                   <Line
                     type="monotone"
                     dataKey="score"
@@ -219,139 +200,49 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ── Ligne 2 : Gravités + Score par module ── */}
-        <div className="dash-row-2">
-
-          {/* PieChart gravités */}
-          <div className="dash-box">
-            <div className="dash-box-head">Répartition par gravité</div>
-            <div style={{ padding: "1rem", height: 200, display: "flex", alignItems: "center" }}>
-              {data.par_gravite.length === 0 ? (
-                <div className="dash-empty">Aucune vulnérabilité</div>
-              ) : (
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={data.par_gravite}
-                      cx="40%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={75}
-                      dataKey="value"
-                      paddingAngle={3}
-                    >
-                      {data.par_gravite.map((entry, i) => (
-                        <Cell
-                          key={i}
-                          fill={GRAVITE_COLORS[entry.name] || "#9CB3CC"}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip
-  content={({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      const score = payload[0].value;
-      const url   = payload[0].payload.url;
-      const color = score >= 80 ? "#16A34A" : score >= 50 ? "#EF9F27" : "#E24B4A";
-      return (
-        <div style={{
-          background: "white",
-          border: "1px solid #DDE8F5",
-          borderRadius: 8,
-          padding: "10px 14px",
-          fontSize: 12,
-          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-          maxWidth: 220,
-        }}>
-          <div style={{ color: "#9CB3CC", marginBottom: 6, fontSize: 11 }}>
-            {label}
-          </div>
-          <div style={{ color, fontWeight: 700, fontSize: 15, marginBottom: 4 }}>
-            Score : {score}/100
-          </div>
-          {url && (
-            <div style={{
-              color: "#185FA5",
-              fontFamily: "monospace",
-              fontSize: 11,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              borderTop: "1px solid #F0F6FF",
-              paddingTop: 6,
-              marginTop: 4,
-            }}>
-              {url}
-            </div>
-          )}
-        </div>
-      );
-    }
-    return null;
-  }}
-/>
-                    <Legend
-                      layout="vertical"
-                      align="right"
-                      verticalAlign="middle"
-                      iconType="circle"
-                      iconSize={9}
-                      formatter={(val) => (
-                        <span style={{ fontSize: 12, color: "#4A6A8A" }}>{val}</span>
-                      )}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              )}
-            </div>
-          </div>
-
-          {/* BarChart score moyen par module */}
-          <div className="dash-box">
-            <div className="dash-box-head">Score moyen par module</div>
-            <div style={{ padding: "1rem", height: 200 }}>
-              {data.score_par_module.length === 0 ? (
-                <div className="dash-empty">Aucun scan</div>
-              ) : (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={data.score_par_module}
-                    margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#F0F6FF" />
-                    <XAxis
-                      dataKey="module"
-                      tick={{ fontSize: 11, fill: "#9CB3CC" }}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis
-                      domain={[0, 100]}
-                      tick={{ fontSize: 11, fill: "#9CB3CC" }}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        background: "white",
-                        border: "1px solid #DDE8F5",
-                        borderRadius: 8,
-                        fontSize: 12,
-                      }}
-                      formatter={(val) => [`${val}/100`, "Score moyen"]}
-                    />
-                    <Bar dataKey="score" radius={[6, 6, 0, 0]}>
-                      {data.score_par_module.map((entry, i) => (
-                        <Cell
-                          key={i}
-                          fill={MODULE_COLORS[entry.module_key] || "#185FA5"}
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              )}
-            </div>
+        {/* ── Score moyen par module (BarChart) ── */}
+        <div className="dash-box" style={{ marginBottom: 14 }}>
+          <div className="dash-box-head">Score moyen par module</div>
+          <div style={{ padding: "1rem", height: 200 }}>
+            {data.score_par_module.length === 0 ? (
+              <div className="dash-empty">Aucun scan</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={data.score_par_module}
+                  margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F0F6FF" />
+                  <XAxis
+                    dataKey="module"
+                    tick={{ fontSize: 11, fill: "#9CB3CC" }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 11, fill: "#9CB3CC" }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "white", border: "1px solid #DDE8F5",
+                      borderRadius: 8, fontSize: 12,
+                    }}
+                    formatter={(val) => [`${val}/100`, "Score moyen"]}
+                  />
+                  <Bar dataKey="score" radius={[6, 6, 0, 0]}>
+                    {data.score_par_module.map((entry, i) => (
+                      <Cell
+                        key={i}
+                        fill={MODULE_COLORS[entry.module_key] || "#185FA5"}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
 
@@ -368,14 +259,17 @@ export default function DashboardPage() {
                 <div key={i} className="dash-site-row">
                   <div>
                     <div className="dash-site-label">
-                      {i === 0 ? "🏆 Meilleur score"
-                        : i === data.top_sites.length - 1 ? "⚠ Score le plus bas"
-                        : "📅 Récent"}
+                      {i === 0 ? (
+                        <><Trophy size={11} color="#16A34A" style={{ marginRight: 4 }} /> Meilleur score</>
+                      ) : i === data.top_sites.length - 1 ? (
+                        <><AlertTriangle size={11} color="#E24B4A" style={{ marginRight: 4 }} /> Score le plus bas</>
+                      ) : (
+                        <><Clock size={11} color="#185FA5" style={{ marginRight: 4 }} /> Récent</>
+                      )}
                     </div>
                     <div className="dash-site-url">{s.url}</div>
                   </div>
-                  <div className="dash-site-score"
-                    style={{ color: scoreColor(s.score) }}>
+                  <div className="dash-site-score" style={{ color: scoreColor(s.score) }}>
                     {s.score}/100
                   </div>
                 </div>
