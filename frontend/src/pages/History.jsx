@@ -148,19 +148,33 @@ function VulnDetailCard({ vuln, index }) {
 
           {/* Extrait HTML */}
           {vuln.html_snippet && (
-            <div className="vuln-section">
-              <div className="vuln-section-title">
-                <Code2 size={13} /> Extrait HTML — contexte de la vulnérabilité
-              </div>
-              <div className="vuln-code-block vuln-html-block">
-                <span className="vuln-code-label">HTML SOURCE</span>
-                <pre><code>{vuln.html_snippet}</code></pre>
-              </div>
-              <p className="vuln-snippet-note">
-                ↑ Le payload a été détecté dans ce fragment de la réponse HTTP du serveur.
-              </p>
-            </div>
-          )}
+  <div className="vuln-section">
+    <div className="vuln-section-title">
+      <Code2 size={13} /> Extrait HTML — contexte de la vulnérabilité
+    </div>
+    <div className="vuln-code-block vuln-html-block">
+      <span className="vuln-code-label">HTML SOURCE</span>
+      <pre>
+        <code dangerouslySetInnerHTML={{
+          __html: vuln.payload
+            ? vuln.html_snippet
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(
+                  vuln.payload.replace(/</g, "&lt;").replace(/>/g, "&gt;"),
+                  `<mark style="background:#d50909;color:white;border-radius:3px;padding:1px 4px;font-weight:bold;">${
+                    vuln.payload.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                  }</mark>`
+                )
+            : vuln.html_snippet.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        }} />
+      </pre>
+    </div>
+    <p className="vuln-snippet-note">
+      ↑ Le payload surligné en <span style={{ color: "#d50909", fontWeight: 700 }}>rouge</span> a été détecté dans ce fragment HTML.
+    </p>
+  </div>
+)}
 
           {/* Références OWASP / CWE */}
           {ref && (
