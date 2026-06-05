@@ -20,7 +20,6 @@ auth_bp = Blueprint("auth", __name__)
 def register():
     data = request.get_json()
 
-    # Validation des champs
     if not data or not data.get("username") or not data.get("email") or not data.get("password"):
         return jsonify({"error": "Tous les champs sont obligatoires"}), 400
 
@@ -28,20 +27,17 @@ def register():
     email    = data["email"].strip().lower()
     password = data["password"]
 
-    # Vérifier si l'utilisateur existe déjà
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "Cet email est déjà utilisé"}), 409
 
     if User.query.filter_by(username=username).first():
         return jsonify({"error": "Ce nom d'utilisateur est déjà pris"}), 409
 
-    # Hasher le mot de passe
     password_hash = bcrypt.hashpw(
         password.encode("utf-8"),
         bcrypt.gensalt()
     ).decode("utf-8")
 
-    # Créer l'utilisateur
     user = User(
         username=username,
         email=email,
@@ -74,6 +70,10 @@ def login():
 
     if not user:
         return jsonify({"error": "Email ou mot de passe incorrect"}), 401
+
+    # ✅ Vérifier si le compte est actif
+    if not user.is_active:
+        return jsonify({"error": "Votre compte a été désactivé. Contactez l'administrateur."}), 403
 
     # Vérifier le mot de passe
     if not bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8")):
