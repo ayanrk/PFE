@@ -50,7 +50,7 @@ def create_app():
     
     @app.route("/api/test")
     def test():
-        return {"message": "Backend PFE Scanner opérationnel", "status": "ok"}
+        return {"message": "Backend MiniSec  opérationnel", "status": "ok"}
 
     return app
 

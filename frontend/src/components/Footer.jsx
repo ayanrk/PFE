@@ -25,7 +25,7 @@ export default function Footer() {
         <div className="footer-brand">
           <Link to="/" className="footer-logo">
             
-            <span className="footer-logo-text">PFE Scanner</span>
+            <span className="footer-logo-text">MiniSec </span>
           </Link>
           <p className="footer-tagline">
             Scanner de vulnérabilités web — analysez la sécurité de vos sites
@@ -73,7 +73,7 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <span className="footer-bottom-brand">
-            <ShieldCheck size={13} /> PFE Scanner
+            <ShieldCheck size={13} /> MiniSec 
           </span>
           <span>
             © {year} — Projet de Fin d'Études 2025/2026 · Licence Développement Informatique

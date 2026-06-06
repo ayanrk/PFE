@@ -155,7 +155,7 @@ def _header_footer(canvas, doc):
 
     canvas.setFillColor(C_BLANC)
     canvas.setFont("Helvetica-Bold", 11)
-    canvas.drawString(2*cm, h - 27, "PFE Scanner")
+    canvas.drawString(2*cm, h - 27, "MiniSec ")
     canvas.setFont("Helvetica", 9)
     canvas.drawString(2*cm + 85, h - 27, "— Rapport de Securite Web")
 
@@ -171,7 +171,7 @@ def _header_footer(canvas, doc):
     canvas.setFont("Helvetica", 7.5)
     canvas.drawString(2*cm, 10,
         f"Genere le {datetime.now().strftime('%d/%m/%Y a %H:%M')} — "
-        "PFE Scanner — Usage autorise uniquement sur les sites dont vous etes proprietaire.")
+        "MiniSec  — Usage autorise uniquement sur les sites dont vous etes proprietaire.")
     canvas.restoreState()
 
 

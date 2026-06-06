@@ -48,7 +48,7 @@ export default function Register() {
               <path d="M9 12L11 14L15 10" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <span className="register-logo-text">PFE Scanner</span>
+          <span className="register-logo-text">MiniSec </span>
         </div>
 
         {/* Onglets */}
@@ -58,7 +58,7 @@ export default function Register() {
         </div>
 
         <h2 className="register-title">Créer un compte</h2>
-        <p className="register-subtitle">Rejoignez PFE Scanner gratuitement</p>
+        <p className="register-subtitle">Rejoignez MiniSec  gratuitement</p>
 
         {error && <div className="register-error">⚠ {error}</div>}
 

@@ -43,7 +43,7 @@ export default function Login() {
               <path d="M9 12L11 14L15 10" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <span className="login-logo-text">PFE Scanner</span>
+          <span className="login-logo-text">MiniSec </span>
         </div>
 
         {/* Onglets */}

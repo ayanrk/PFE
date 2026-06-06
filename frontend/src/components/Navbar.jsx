@@ -30,7 +30,7 @@ export default function Navbar() {
             <path d="M20 8L32 14V22C32 28.627 26.627 34.627 20 36C13.373 34.627 8 28.627 8 22V14L20 8Z" fill="white" fillOpacity="0.9"/>
             <path d="M16 20L19 23L24 17" stroke="#185FA5" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <span className="navbar-logo-text">PFE Scanner</span>
+          <span className="navbar-logo-text">MiniSec </span>
         </Link>
 
         <div className="navbar-links">
